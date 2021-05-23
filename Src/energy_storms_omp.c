@@ -20,6 +20,8 @@
 #include<sys/time.h>
 #include<omp.h>
 
+#define THREAD_NUM 8
+
 /* Function to get wall time */
 double cp_Wtime(){
     struct timeval tv;
@@ -205,26 +207,27 @@ int main(int argc, char *argv[]) {
             layer[k] = ( layer_copy[k-1] + layer_copy[k] + layer_copy[k+1] ) / 3;
 
         /* 4.3. Locate the maximum value in the layer, and its position */
-        int thread_num = omp_get_num_threads();
-        float threads[thread_num];
+        float auxMax[THREAD_NUM] = {0.0f};
+        int auxPos[THREAD_NUM]= {0};
         int id;
-        #pragma omp parallel default(none) private(id) shared(threads, layer, layer_size, positions, i)
+        #pragma omp parallel num_threads(THREAD_NUM) default(none) private(id) shared(auxMax, auxPos, layer, layer_size, positions)
         {
             id = omp_get_thread_num();
             #pragma omp for
             for (k = 1; k < layer_size - 1; k++) {
                 /* Check it only if it is a local maximum */
                 if (layer[k] > layer[k - 1] && layer[k] > layer[k + 1]) {
-                    if (layer[k] > threads[id]) {
-                        threads[id] = layer[k];
-                        positions[i] = k;
+                    if (layer[k] > auxMax[id]) {
+                        auxMax[id] = layer[k];
+                        auxPos[id] = k;
                     }
                 }
             }
         }
-        for(int l = 0; l < thread_num; l++){
-            if(threads[l] > maximum[i]){
-                maximum[i] = threads[l];
+        for(int l = 0; l < THREAD_NUM; l++){
+            if(auxMax[l] > maximum[i]){
+                maximum[i] = auxMax[l];
+                positions[i] = auxPos[l];
             }
         }
     }
