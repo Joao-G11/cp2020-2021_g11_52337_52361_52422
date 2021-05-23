@@ -21,12 +21,7 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="dcee4a58-334b-4108-b552-1e629f23eb41" name="Default Changelist" comment="">
-      <change afterPath="$PROJECT_DIR$/.idea/Src.iml" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/.idea/misc.xml" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/.idea/vcs.xml" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/profiler.txt" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Makefile" beforeDir="false" afterPath="$PROJECT_DIR$/Makefile" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/energy_storms_omp.c" beforeDir="false" afterPath="$PROJECT_DIR$/energy_storms_omp.c" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
@@ -89,14 +84,9 @@
     <property name="cidr.known.project.marker" value="true" />
     <property name="last_opened_file_path" value="$PROJECT_DIR$" />
     <property name="nodejs_package_manager_path" value="npm" />
-    <property name="settings.editor.selected.configurable" value="CLionExternalConfigurable" />
+    <property name="settings.editor.selected.configurable" value="CMakeSettings" />
   </component>
   <component name="RunManager" selected="Makefile Application.debug_seq">
-    <configuration default="true" type="CLionExternalRunConfiguration" factoryName="Application" REDIRECT_INPUT="false" ELEVATE="false" USE_EXTERNAL_CONSOLE="false" PASS_PARENT_ENVS_2="true">
-      <method v="2">
-        <option name="CLION.EXTERNAL.BUILD" enabled="true" />
-      </method>
-    </configuration>
     <configuration name="Unnamed" type="CLionNativeAppRunConfigurationType" nameIsGenerated="true" REDIRECT_INPUT="false" ELEVATE="false" USE_EXTERNAL_CONSOLE="false" PASS_PARENT_ENVS_2="true" PROJECT_NAME="Src" TARGET_NAME="all" CONFIG_NAME="all" version="1">
       <method v="2">
         <option name="CLION.COMPOUND.BUILD" enabled="true" />
@@ -107,12 +97,12 @@
         <option name="CLION.COMPOUND.BUILD" enabled="true" />
       </method>
     </configuration>
-    <configuration name="debug_omp" type="CLionNativeAppRunConfigurationType" singleton="false" PROGRAM_PARAMS="35 test_files/test_09_a16-17_p3_w1 test_files/test_02_a30k_p20k_w6 test_files/test_07_a1M_p5k_w4" REDIRECT_INPUT="false" ELEVATE="false" USE_EXTERNAL_CONSOLE="false" PASS_PARENT_ENVS_2="true" PROJECT_NAME="Src" TARGET_NAME="debug_omp" CONFIG_NAME="debug_omp" version="1">
+    <configuration name="debug_omp" type="CLionNativeAppRunConfigurationType" singleton="false" PROGRAM_PARAMS="2000 test_files/test_09_a16-17_p3_w1 test_files/test_07_a1M_p5k_w2" REDIRECT_INPUT="false" ELEVATE="false" USE_EXTERNAL_CONSOLE="false" PASS_PARENT_ENVS_2="true" PROJECT_NAME="Src" TARGET_NAME="debug_omp" CONFIG_NAME="debug_omp" version="1" RUN_PATH="$PROJECT_DIR$/energy_storms_omp.exe">
       <method v="2">
         <option name="CLION.COMPOUND.BUILD" enabled="true" />
       </method>
     </configuration>
-    <configuration name="debug_seq" type="CLionNativeAppRunConfigurationType" PROGRAM_PARAMS="35 test_files/test_09_a16-17_p3_w1 test_files/test_02_a30k_p20k_w6 test_files/test_07_a1M_p5k_w4" REDIRECT_INPUT="false" ELEVATE="false" USE_EXTERNAL_CONSOLE="false" PASS_PARENT_ENVS_2="true" PROJECT_NAME="Src" TARGET_NAME="debug_seq" CONFIG_NAME="debug_seq" version="1" RUN_PATH="$PROJECT_DIR$/energy_storms_seq.exe">
+    <configuration name="debug_seq" type="CLionNativeAppRunConfigurationType" PROGRAM_PARAMS="2000 test_files/test_09_a16-17_p3_w1 test_files/test_07_a1M_p5k_w2" REDIRECT_INPUT="false" ELEVATE="false" USE_EXTERNAL_CONSOLE="false" PASS_PARENT_ENVS_2="true" PROJECT_NAME="Src" TARGET_NAME="debug_seq" CONFIG_NAME="debug_seq" version="1" RUN_PATH="$PROJECT_DIR$/energy_storms_seq.exe">
       <method v="2">
         <option name="CLION.COMPOUND.BUILD" enabled="true" />
       </method>
@@ -140,6 +130,11 @@
     <configuration default="true" type="CMakeRunConfiguration" factoryName="Application" REDIRECT_INPUT="false" ELEVATE="false" USE_EXTERNAL_CONSOLE="false" PASS_PARENT_ENVS_2="true">
       <method v="2">
         <option name="com.jetbrains.cidr.execution.CidrBuildBeforeRunTaskProvider$BuildBeforeRunTask" enabled="true" />
+      </method>
+    </configuration>
+    <configuration default="true" type="GradleAppRunConfiguration" factoryName="Application" REDIRECT_INPUT="false" ELEVATE="false" USE_EXTERNAL_CONSOLE="false" PASS_PARENT_ENVS_2="true">
+      <method v="2">
+        <option name="com.jetbrains.cidr.cpp.gradle.execution.GradleNativeBuildBeforeRunTaskProvider$BuildBeforeRunTask" enabled="true" />
       </method>
     </configuration>
     <list>
@@ -170,6 +165,7 @@
       <workItem from="1621709890921" duration="1277000" />
       <workItem from="1621722248170" duration="956000" />
       <workItem from="1621761168414" duration="4340000" />
+      <workItem from="1621792541120" duration="8839000" />
     </task>
     <servers />
   </component>
