@@ -14,6 +14,8 @@ if (len(sys.argv) != 3 or len(sys.argv) != 4) :
     sys.exit(-1);
     
 
+
+
 nParticles  = int(sys.argv[1])
 maxPosition = int(sys.argv[2])
 max_energy  = int(sys.argv[3])
@@ -21,16 +23,16 @@ max_energy  = int(sys.argv[3])
 if(len(sys.argv) == 3):
 
     for i in range (nParticles):
-        position = random.randint(0, maxPosition)
-        energy = random.randint(0, max_energy)
+        position = random.randint(1, maxPosition)
+        energy = random.randint(1, max_energy)
         print('%d %d' % (position, energy))
             
 else:
     
     mode = int(sys.argv[4])
     for i in range (nParticles):
-        position = random.triangular(0, maxPosition, mode)
-        energy = random.triangular(0, max_energy, mode)
+        position = int(random.triangular(1, maxPosition, mode))
+        energy = int(random.triangular(1, max_energy, mode))
         print('%d %d' % (position, energy))
 
 
