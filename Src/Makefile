@@ -44,17 +44,20 @@ help:
 	@echo
 	@echo "make all	Build all versions (Sequential, OpenMPCUDA)"
 	@echo "make debug_seq	Build the sequential version with demo output for small arrays (size<=35)"
-	@echo "make debug_par	Build the parallel version with demo output for small arrays (size<=35)"
+	@echo "make debug_omp	Build the parallel version with demo output for small arrays (size<=35)"
 	@echo "make clean	Remove the targets"
 	@echo
 
 all: $(EXES)
 
 energy_storms_seq: energy_storms.c
-	$(CC) $(CFLAGS) $(DEBUG) -o $@ $< $(LIBS)
+	$(CC) $(CFLAGS) $(DEBUG) -o $@ $< $(LIBS) -pg
 
 energy_storms_omp: energy_storms_omp.c
 	$(CC) $(CFLAGS) $(DEBUG) $(OMPFLAG) -o $@ $< $(LIBS)
+
+gprof:
+	gprof energy_storms_seq gmon.out > profiler.txt
 
 # Remove the target files
 clean:
