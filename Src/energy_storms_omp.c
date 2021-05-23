@@ -18,7 +18,7 @@
 #include<stdlib.h>
 #include<math.h>
 #include<sys/time.h>
-#include<omp-tools.h>
+#include<omp.h>
 
 /* Function to get wall time */
 double cp_Wtime(){
@@ -205,13 +205,26 @@ int main(int argc, char *argv[]) {
             layer[k] = ( layer_copy[k-1] + layer_copy[k] + layer_copy[k+1] ) / 3;
 
         /* 4.3. Locate the maximum value in the layer, and its position */
-        for( k=1; k<layer_size-1; k++ ) {
-            /* Check it only if it is a local maximum */
-            if ( layer[k] > layer[k-1] && layer[k] > layer[k+1] ) {
-                if ( layer[k] > maximum[i] ) {
-                    maximum[i] = layer[k];
-                    positions[i] = k;
+        int thread_num = omp_get_num_threads();
+        float threads[thread_num];
+        int id;
+        #pragma omp parallel default(none) private(id) shared(threads, layer, layer_size, positions, i)
+        {
+            id = omp_get_thread_num();
+            #pragma omp for
+            for (k = 1; k < layer_size - 1; k++) {
+                /* Check it only if it is a local maximum */
+                if (layer[k] > layer[k - 1] && layer[k] > layer[k + 1]) {
+                    if (layer[k] > threads[id]) {
+                        threads[id] = layer[k];
+                        positions[i] = k;
+                    }
                 }
+            }
+        }
+        for(int l = 0; l < thread_num; l++){
+            if(threads[l] > maximum[i]){
+                maximum[i] = threads[l];
             }
         }
     }
