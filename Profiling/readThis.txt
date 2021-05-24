@@ -1,0 +1,7 @@
+The text files of this directory are product of the gprof profiler.
+
+In the manyControlPoint.txt file the profiler ran with many points and a single wave file
+The following command was used: ./energy_storms_seq 1000000000 test_files/test_09_a16-17_p3_w1
+
+In the multipleWaves.txt file the profiler ran with a reduced number of points (10000) and a three wave files
+The following command was used: ./energy_storms_seq 10000 test_files/test_09_a16-17_p3_w1 test_files/test_02_a30k_p20k_w5 test_files/test_01_a35_p7_w2

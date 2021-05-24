@@ -132,11 +132,84 @@ Storm read_storm_file( char *fname ) {
     return storm;
 }
 
+void cicleFourPointOne(int j, int k, Storm storms[], int storm, int layer_size, float* layer){
+
+    for( j=0; j<storms[storm].size; j++ ) {
+
+        /* Get impact energy (expressed in thousandths) */
+        float energy = (float)storms[storm].posval[j*2+1] * 1000;
+        /* Get impact position */
+        int position = storms[storm].posval[j*2];
+
+        /* For each cell in the layer */
+        for( k=0; k<layer_size; k++ ) {
+            /* Update the energy value for the cell */
+            update( layer, layer_size, k, position, energy );
+        }
+    }
+
+}
+
+void cicleFourPointTwoPointOne(int k, int layer_size, float *layer_copy, float *layer){
+
+    for( k=0; k<layer_size; k++ )
+        layer_copy[k] = layer[k];
+
+}
+
+void cicleFourPointTwoPointTwo(int k, int layer_size, float *layer_copy, float *layer){
+
+    for( k=1; k<layer_size-1; k++ )
+        layer[k] = ( layer_copy[k-1] + layer_copy[k] + layer_copy[k+1] ) / 3;
+
+}
+
+void cicleFourPointThree(int k, int storm,  int layer_size, float *layer, float maximum[], int positions[]){
+
+    for( k=1; k<layer_size-1; k++ ) {
+        /* Check it only if it is a local maximum */
+        if ( layer[k] > layer[k-1] && layer[k] > layer[k+1] ) {
+            if ( layer[k] > maximum[storm] ) {
+                maximum[storm] = layer[k];
+                positions[storm] = k;
+            }
+        }
+    }
+
+}
+
+
+
+void simulateStorms(Storm storms[], float *layer, float *layer_copy, int layer_size, float maximum[], int positions[], int storm){
+
+    int j, k;
+
+    /* 4.1. Add impacts energies to layer cells */
+    /* For each particle */
+    cicleFourPointOne(j, k, storms, storm, layer_size, layer);
+
+
+    /* 4.2. Energy relaxation between storms */
+    /* 4.2.1. Copy values to the ancillary array */
+    cicleFourPointTwoPointOne(k, layer_size, layer_copy, layer);
+
+    /* 4.2.2. Update layer using the ancillary values.
+              Skip updating the first and last positions */
+    cicleFourPointTwoPointTwo(k, layer_size, layer_copy, layer);
+
+    /* 4.3. Locate the maximum value in the layer, and its position */
+    cicleFourPointThree(k, storm, layer_size, layer, maximum, positions);
+
+}
+
+
+
 /*
  * MAIN PROGRAM
  */
 int main(int argc, char *argv[]) {
-    int i,j,k;
+
+    int i;
 
     /* 1.1. Read arguments */
     if (argc<3) {
@@ -172,47 +245,12 @@ int main(int argc, char *argv[]) {
         fprintf(stderr,"Error: Allocating the layer memory\n");
         exit( EXIT_FAILURE );
     }
-    for( k=0; k<layer_size; k++ ) layer[k] = 0.0f;
-    for( k=0; k<layer_size; k++ ) layer_copy[k] = 0.0f;
-    
+    for( int k=0; k<layer_size; k++ ) layer[k] = 0.0f;
+    for( int k=0; k<layer_size; k++ ) layer_copy[k] = 0.0f;
+
     /* 4. Storms simulation */
     for( i=0; i<num_storms; i++) {
-
-        /* 4.1. Add impacts energies to layer cells */
-        /* For each particle */
-        for( j=0; j<storms[i].size; j++ ) {
-            /* Get impact energy (expressed in thousandths) */
-            float energy = (float)storms[i].posval[j*2+1] * 1000;
-            /* Get impact position */
-            int position = storms[i].posval[j*2];
-
-            /* For each cell in the layer */
-            for( k=0; k<layer_size; k++ ) {
-                /* Update the energy value for the cell */
-                update( layer, layer_size, k, position, energy );
-            }
-        }
-
-        /* 4.2. Energy relaxation between storms */
-        /* 4.2.1. Copy values to the ancillary array */
-        for( k=0; k<layer_size; k++ ) 
-            layer_copy[k] = layer[k];
-
-        /* 4.2.2. Update layer using the ancillary values.
-                  Skip updating the first and last positions */
-        for( k=1; k<layer_size-1; k++ )
-            layer[k] = ( layer_copy[k-1] + layer_copy[k] + layer_copy[k+1] ) / 3;
-
-        /* 4.3. Locate the maximum value in the layer, and its position */
-        for( k=1; k<layer_size-1; k++ ) {
-            /* Check it only if it is a local maximum */
-            if ( layer[k] > layer[k-1] && layer[k] > layer[k+1] ) {
-                if ( layer[k] > maximum[i] ) {
-                    maximum[i] = layer[k];
-                    positions[i] = k;
-                }
-            }
-        }
+        simulateStorms(storms, layer, layer_copy, layer_size, maximum, positions, i);
     }
 
     /* END: Do NOT optimize/parallelize the code below this point */
