@@ -21,6 +21,8 @@ nParticles  = int(sys.argv[1])
 maxPosition = int(sys.argv[2])
 max_energy  = int(sys.argv[3])
 
+print(nParticles)
+
 if(len(sys.argv) == 4):
 
     for i in range (nParticles):
