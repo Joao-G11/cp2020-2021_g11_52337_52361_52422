@@ -175,9 +175,11 @@ int main(int argc, char *argv[]) {
         fprintf(stderr,"Error: Allocating the layer memory\n");
         exit( EXIT_FAILURE );
     }
-    for( k=0; k<layer_size; k++ ) layer[k] = 0.0f;
-    for( k=0; k<layer_size; k++ ) layer_copy[k] = 0.0f;
-    
+    for( k=0; k<layer_size; k++ ){
+        layer[k] = 0.0f;layer[k] = 0.0f;
+        layer_copy[k] = 0.0f;
+    }
+
     /* 4. Storms simulation */
     for( i=0; i<num_storms; i++) {
 
@@ -193,18 +195,19 @@ int main(int argc, char *argv[]) {
             for( k=0; k<layer_size; k++ ) {
                 /* Update the energy value for the cell */
                 update( layer, layer_size, k, position, energy );
+
             }
         }
 
         /* 4.2. Energy relaxation between storms */
         /* 4.2.1. Copy values to the ancillary array */
-        for( k=0; k<layer_size; k++ ) 
+        for( k=0; k<layer_size; k++ )
             layer_copy[k] = layer[k];
 
         /* 4.2.2. Update layer using the ancillary values.
                   Skip updating the first and last positions */
-        for( k=1; k<layer_size-1; k++ )
-            layer[k] = ( layer_copy[k-1] + layer_copy[k] + layer_copy[k+1] ) / 3;
+        for( k=2; k<layer_size; k++ )
+            layer[k-1] = ( layer_copy[k-2] + layer_copy[k-1] + layer_copy[k] ) / 3;
 
         /* 4.3. Locate the maximum value in the layer, and its position */
         float auxMax[THREAD_NUM] = {0.0f};
