@@ -185,8 +185,8 @@ int main(int argc, char *argv[]) {
 
         /* 4.1. Add impacts energies to layer cells */
         /* For each particle */
-        for( j=0; j<storms[i].size; j++ ) {
-            /* Get impact energy (expressed in thousandths) */
+        for( j=0; j<storms[i].size; j++ ) {                         // TODO: parallelize both fors and distribute threads on the loops
+            /* Get impact energy (expressed in thousandths) */      // TODO: Bruno (with critical) - Joao (with arrays)
             float energy = (float)storms[i].posval[j*2+1] * 1000;
             /* Get impact position */
             int position = storms[i].posval[j*2];
@@ -206,11 +206,11 @@ int main(int argc, char *argv[]) {
 
         /* 4.2.2. Update layer using the ancillary values.
                   Skip updating the first and last positions */
-        for( k=2; k<layer_size; k++ )
+        for( k=2; k<layer_size; k++ ) // TODO: parallelize with number of the cpu threads. Andre
             layer[k-1] = ( layer_copy[k-2] + layer_copy[k-1] + layer_copy[k] ) / 3;
 
         /* 4.3. Locate the maximum value in the layer, and its position */
-        float auxMax[THREAD_NUM] = {0.0f};
+        float auxMax[THREAD_NUM] = {0.0f}; // TODO: change inicialization. Andre
         int auxPos[THREAD_NUM]= {0};
         int id;
         #pragma omp parallel num_threads(THREAD_NUM) default(none) private(id) shared(auxMax, auxPos, layer, layer_size, positions)
