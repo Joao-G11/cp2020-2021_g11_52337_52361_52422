@@ -88,7 +88,7 @@ void debug_print(int layer_size, float *layer, int *positions, float *maximum, i
                 printf("o");
 
             /* If the cell is the maximum of any storm, print the storm mark */
-            for (i=0; i<num_storms; i++) 
+            for (i=0; i<num_storms; i++)
                 if ( positions[i] == k ) printf(" M%d", i );
 
             /* Line feed */
@@ -107,7 +107,7 @@ Storm read_storm_file( char *fname ) {
         exit( EXIT_FAILURE );
     }
 
-    Storm storm;    
+    Storm storm;
     int ok = fscanf(fstorm, "%d", &(storm.size) );
     if ( ok != 1 ) {
         fprintf(stderr,"Error: Reading size of storm file %s\n", fname );
@@ -119,10 +119,10 @@ Storm read_storm_file( char *fname ) {
         fprintf(stderr,"Error: Allocating memory for storm file %s, with size %d\n", fname, storm.size );
         exit( EXIT_FAILURE );
     }
-    
+
     int elem;
     for ( elem=0; elem<storm.size; elem++ ) {
-        ok = fscanf(fstorm, "%d %d\n", 
+        ok = fscanf(fstorm, "%d %d\n",
                     &(storm.posval[elem*2]),
                     &(storm.posval[elem*2+1]) );
         if ( ok != 2 ) {
@@ -142,18 +142,18 @@ int main(int argc, char *argv[]) {
     int i,j,k;
 
     /* 1.1. Read arguments */
-    if (argc<3) {
-        fprintf(stderr,"Usage: %s <size> <storm_1_file> [ <storm_i_file> ] ... \n", argv[0] );
+    if (argc<4) {
+        fprintf(stderr,"Usage: %s <thread_num> <size> <storm_1_file> [ <storm_i_file> ] ... \n", argv[0] );
         exit( EXIT_FAILURE );
     }
-
-    int layer_size = atoi( argv[1] );
-    int num_storms = argc-2;
+    int thread_num = atoi( argv[1]);
+    int layer_size = atoi( argv[2] );
+    int num_storms = argc-3;
     Storm storms[ num_storms ];
 
     /* 1.2. Read storms information */
-    for( i=2; i<argc; i++ ) 
-        storms[i-2] = read_storm_file( argv[i] );
+    for( i=3; i<argc; i++ )
+        storms[i-3] = read_storm_file( argv[i] );
 
     /* 1.3. Intialize maximum levels to zero */
     float maximum[ num_storms ];
@@ -175,57 +175,60 @@ int main(int argc, char *argv[]) {
         fprintf(stderr,"Error: Allocating the layer memory\n");
         exit( EXIT_FAILURE );
     }
-    for( k=0; k<layer_size; k++ ){
-        layer[k] = 0.0f;layer[k] = 0.0f;
-        layer_copy[k] = 0.0f;
-    }
 
     /* 4. Storms simulation */
     for( i=0; i<num_storms; i++) {
 
         /* 4.1. Add impacts energies to layer cells */
         /* For each particle */
-        for( j=0; j<storms[i].size; j++ ) {                         // TODO: parallelize both fors and distribute threads on the loops
-            /* Get impact energy (expressed in thousandths) */      // TODO: Bruno (with critical) - Joao (with arrays)
+        for( j=0; j<storms[i].size; j++ ) {
+            /* Get impact energy (expressed in thousandths) */
             float energy = (float)storms[i].posval[j*2+1] * 1000;
             /* Get impact position */
             int position = storms[i].posval[j*2];
 
             /* For each cell in the layer */
-            for( k=0; k<layer_size; k++ ) {
-                /* Update the energy value for the cell */
-                update( layer, layer_size, k, position, energy );
-                /* 4.2. Energy relaxation between storms */
-                /* 4.2.1. Copy values to the ancillary array */
-                layer_copy[k] = layer[k];
+            #pragma for omp parallel num_theads(thread_num) default(none) private(k) shared(layer, layer_copy, layer_size, position, energy)
+            {
+                for (k = 0; k < layer_size; k++) {
+                    if( i== 0 && j== 0){
+                        layer[k] = 0.0f;
+                        layer_copy[k] = 0.0f;
+                    }
+                    /* Update the energy value for the cell */
+                    update(layer, layer_size, k, position, energy);
+                    /* 4.2. Energy relaxation between storms */
+                    /* 4.2.1. Copy values to the ancillary array */
+                    if(j == storms[i].size-1) {
+                        layer_copy[k] = layer[k];
+                    }
+                }
             }
         }
 
-       
 
-
-
-        /* 4.2.2. Update layer using the ancillary values.
-                  Skip updating the first and last positions */
-        #pragma for omp parallel  num_threads(THREAD_NUM) private(k) shared(layer, layer_copy, layer_size)
-        {
-        for (k = 2; k < layer_size; k++) // TODO: parallelize with number of the cpu threads. Andre
-
-            layer[k - 1] = (layer_copy[k - 2] + layer_copy[k - 1] + layer_copy[k]) / 3;
-        }
         /* 4.3. Locate the maximum value in the layer, and its position */
+        float auxMax[thread_num];
+        int auxPos[thread_num];
 
-
-        float auxMax[THREAD_NUM] = {0.0f}; // TODO: change inicialization. Andre
-        int auxPos[THREAD_NUM]= {0};
-
-
+        for(k=0; k<thread_num; k++){
+            auxMax[k] = 0;
+            auxPos[k] = 0;
+        }
         int id;
-        #pragma omp parallel num_threads(THREAD_NUM) default(none) private(id) shared(auxMax, auxPos, layer, layer_size, positions)
+        #pragma omp parallel num_threads(thread_num) default(none) private(id) shared(layer,layer_copy, layer_size, positions, auxMax, auxPos)
         {
             id = omp_get_thread_num();
             #pragma omp for
             for (k = 1; k < layer_size - 1; k++) {
+                /* 4.2.2. Update layer using the ancillary values.
+                Skip updating the first and last positions */
+                if(k > 1)
+                    layer[k - 1] = (layer_copy[k - 2] + layer_copy[k - 1] + layer_copy[k]) / 3;
+                if(k < layer_size - 2)
+                    layer[k + 1] = ( layer_copy[k] + layer_copy[k + 1] + layer_copy[k + 2] ) / 3;
+                layer[k] = ( layer_copy[k - 1] + layer_copy[k] + layer_copy[k + 1] ) / 3;
+
                 /* Check it only if it is a local maximum */
                 if (layer[k] > layer[k - 1] && layer[k] > layer[k + 1]) {
                     if (layer[k] > auxMax[id]) {
@@ -233,14 +236,16 @@ int main(int argc, char *argv[]) {
                         auxPos[id] = k;
                     }
                 }
+
             }
         }
-        for(int l = 0; l < THREAD_NUM; l++){
-            if(auxMax[l] > maximum[i]){
-                maximum[i] = auxMax[l];
-                positions[i] = auxPos[l];
+        for(k = 0; k < thread_num; k++) {
+            if (auxMax[k] > maximum[i]) {
+                maximum[i] = auxMax[k];
+                positions[i] = auxPos[k];
             }
         }
+
     }
 
     /* END: Do NOT optimize/parallelize the code below this point */
@@ -263,7 +268,7 @@ int main(int argc, char *argv[]) {
         printf(" %d %f", positions[i], maximum[i] );
     printf("\n");
 
-    /* 8. Free resources */    
+    /* 8. Free resources */
     for( i=0; i<argc-2; i++ )
         free( storms[i].posval );
 
