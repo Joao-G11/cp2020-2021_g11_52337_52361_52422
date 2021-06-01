@@ -195,23 +195,31 @@ int main(int argc, char *argv[]) {
             for( k=0; k<layer_size; k++ ) {
                 /* Update the energy value for the cell */
                 update( layer, layer_size, k, position, energy );
-
+                /* 4.2. Energy relaxation between storms */
+                /* 4.2.1. Copy values to the ancillary array */
+                layer_copy[k] = layer[k];
             }
         }
 
-        /* 4.2. Energy relaxation between storms */
-        /* 4.2.1. Copy values to the ancillary array */
-        for( k=0; k<layer_size; k++ )
-            layer_copy[k] = layer[k];
+       
+
+
 
         /* 4.2.2. Update layer using the ancillary values.
                   Skip updating the first and last positions */
-        for( k=2; k<layer_size; k++ ) // TODO: parallelize with number of the cpu threads. Andre
-            layer[k-1] = ( layer_copy[k-2] + layer_copy[k-1] + layer_copy[k] ) / 3;
+        #pragma for omp parallel  num_threads(THREAD_NUM) private(k) shared(layer, layer_copy, layer_size)
+        {
+        for (k = 2; k < layer_size; k++) // TODO: parallelize with number of the cpu threads. Andre
 
+            layer[k - 1] = (layer_copy[k - 2] + layer_copy[k - 1] + layer_copy[k]) / 3;
+        }
         /* 4.3. Locate the maximum value in the layer, and its position */
+
+
         float auxMax[THREAD_NUM] = {0.0f}; // TODO: change inicialization. Andre
         int auxPos[THREAD_NUM]= {0};
+
+
         int id;
         #pragma omp parallel num_threads(THREAD_NUM) default(none) private(id) shared(auxMax, auxPos, layer, layer_size, positions)
         {
