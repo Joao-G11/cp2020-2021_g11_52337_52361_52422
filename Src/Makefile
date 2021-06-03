@@ -28,7 +28,7 @@ FLAGS=-O3
 LIBS=-lm
 
 # Targets to build
-EXES=energy_storms_seq energy_storms_omp
+EXES=energy_storms_seq energy_storms_omp output_file.csv
 
 # Rules. By default show help
 help:

@@ -188,7 +188,7 @@ int main(int argc, char *argv[]) {
             int position = storms[i].posval[j*2];
 
             /* For each cell in the layer */
-            #pragma for omp parallel num_theads(thread_num) default(none) private(k) shared(layer, layer_copy, layer_size, position, energy)
+            #pragma for omp parallel num_theads(thread_num) default(none) shared(layer, layer_copy, layer_size, position, energy)
             {
                 for (k = 0; k < layer_size; k++) {
                     if( i== 0 && j== 0){
