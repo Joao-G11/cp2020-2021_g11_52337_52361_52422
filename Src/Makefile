@@ -28,7 +28,9 @@ FLAGS=-O3
 LIBS=-lm
 
 # Targets to build
-EXES=energy_storms_seq energy_storms_omp output_file.csv
+FILES=energy_storms_seq energy_storms_omp output_file.csv
+
+EXES=energy_storms_seq energy_storms_omp
 
 # Rules. By default show help
 help:
@@ -61,7 +63,7 @@ gprof:
 
 # Remove the target files
 clean:
-	rm -rf $(EXES)
+	rm -rf $(FILES)
 
 # Compile in debug mode
 debug_seq:
