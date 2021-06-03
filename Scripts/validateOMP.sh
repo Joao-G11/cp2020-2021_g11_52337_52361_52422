@@ -3,15 +3,15 @@
 #usage: ./validateOMP points
 THREADS="1 2 4 8 16"
 
-seqRes=$(./../Src/energy_storms_seq $1 ../Src/test_files/test_01_a35_p8_w1 ../Src/test_files/test_01_a35_p7_w2 ../Src/test_files/test_01_a35_p5_w3 ../Src/test_files/test_01_a35_p8_w4)
+seqRes=$(./../Src/energy_storms_seq 100000000 ../Src/test_files/test_09_a16-17_p3_w1)
 
 for t in $THREADS; do
     if [ "$t" = 1 ]
     then
-      seqRes=${seqRes:15}
+      seqRes=${seqRes:20}
     fi
-    ompRes=$(./../Src/energy_storms_omp $t $1 ../Src/test_files/test_01_a35_p8_w1 ../Src/test_files/test_01_a35_p7_w2 ../Src/test_files/test_01_a35_p5_w3 ../Src/test_files/test_01_a35_p8_w4)
-    ompRes=${ompRes:15}
+    ompRes=$(./../Src/energy_storms_omp $t 100000000 ../Src/test_files/test_09_a16-17_p3_w1)
+    ompRes=${ompRes:20}
     if [ "$seqRes" != "$ompRes" ]
     then
         echo $seqRes
