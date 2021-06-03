@@ -51,7 +51,7 @@ help:
 all: $(EXES)
 
 energy_storms_seq: energy_storms.c
-	$(CC) $(CFLAGS) $(DEBUG) -o $@ $< $(LIBS) -pg
+	$(CC) $(CFLAGS) $(DEBUG) -o $@ $< $(LIBS)
 
 energy_storms_omp: energy_storms_omp.c
 	$(CC) $(CFLAGS) $(DEBUG) $(OMPFLAG) -o $@ $< $(LIBS)
