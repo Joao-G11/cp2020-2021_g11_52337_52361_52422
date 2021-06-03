@@ -47,7 +47,7 @@ do
 
  echo "Running:       " $PROG $PAR $FILES
 
- THREADS="1 2 4 8 16"
+ THREADS="1 2 4 8 16 32"
  NRUNS="5"
  for TH in $THREADS
  do
