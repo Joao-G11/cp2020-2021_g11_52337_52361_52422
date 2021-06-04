@@ -14,7 +14,7 @@ PROG="./energy_storms_omp"  ## Nome do programa que vai ser chamado
 
 # Main cicle
 
-for TF in 01 02 03 04 05 06 07 08 09
+for TF in 02
 
 do
 
@@ -43,6 +43,7 @@ do
 
   "a16-17") PAR=17;;
 
+  "a100") PAR=100;;
  esac
 
  echo "Running:       " $PROG $PAR $FILES
