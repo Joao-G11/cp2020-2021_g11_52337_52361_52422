@@ -13,10 +13,10 @@ test_num = 4  # const
 workers = [1, 2, 4, 8, 16, 32]
 runs = 5
 
-if len(sys.argv) != 2:
-    print("Usage: python3 processResults.py <file_name>")
+if len(sys.argv) != 3:
+    print("Usage: python3 processResults.py <remove_outliers> <file_name>")
 
-input_file = open(sys.argv[1], "r")
+input_file = open(sys.argv[2], "r")
 
 results = np.zeros((test_num, len(workers)))
 
