@@ -22,7 +22,6 @@
   <component name="ChangeListManager">
     <list default="true" id="dcee4a58-334b-4108-b552-1e629f23eb41" name="Default Changelist" comment="">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/energy_storms_omp.c" beforeDir="false" afterPath="$PROJECT_DIR$/energy_storms_omp.c" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -97,7 +96,7 @@
         <option name="CLION.COMPOUND.BUILD" enabled="true" />
       </method>
     </configuration>
-    <configuration name="debug_omp" type="CLionNativeAppRunConfigurationType" singleton="false" PROGRAM_PARAMS="20000 test_files/test_09_a16-17_p3_w1 test_files/test_07_a1M_p5k_w2" REDIRECT_INPUT="false" ELEVATE="false" USE_EXTERNAL_CONSOLE="false" PASS_PARENT_ENVS_2="true" PROJECT_NAME="Src" TARGET_NAME="debug_omp" CONFIG_NAME="debug_omp" version="1" RUN_PATH="$PROJECT_DIR$/energy_storms_omp.exe">
+    <configuration name="debug_omp" type="CLionNativeAppRunConfigurationType" singleton="false" PROGRAM_PARAMS="8 30000 test_files/test_02_a30k_p20k_w1 test_files/test_02_a30k_p20k_w2 test_files/test_02_a30k_p20k_w3 test_files/test_02_a30k_p20k_w4 test_files/test_02_a30k_p20k_w5 test_files/test_02_a30k_p20k_w6" REDIRECT_INPUT="false" ELEVATE="false" USE_EXTERNAL_CONSOLE="false" PASS_PARENT_ENVS_2="true" PROJECT_NAME="Src" TARGET_NAME="debug_omp" CONFIG_NAME="debug_omp" version="1" RUN_PATH="$PROJECT_DIR$/energy_storms_omp.exe">
       <method v="2">
         <option name="CLION.COMPOUND.BUILD" enabled="true" />
       </method>
@@ -165,6 +164,9 @@
       <workItem from="1622065044296" duration="487000" />
       <workItem from="1622110449421" duration="1956000" />
       <workItem from="1622368163917" duration="3814000" />
+      <workItem from="1622714576815" duration="5361000" />
+      <workItem from="1622742193576" duration="184000" />
+      <workItem from="1622744064278" duration="331000" />
     </task>
     <servers />
   </component>
