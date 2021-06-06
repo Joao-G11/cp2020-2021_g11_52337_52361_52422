@@ -1,6 +1,6 @@
 #!/bin/bash
 
-#usage: ./validateOMP points
+#usage: ./validateOMP
 THREADS="1 2 4 8 16"
 
 seqRes=$(./../Src/energy_storms_seq 100000000 ../Src/test_files/test_09_a16-17_p3_w1)

@@ -10,9 +10,9 @@ import random
 
 
 if (len(sys.argv) != 4 and len(sys.argv) != 5) : 
-    print("invalid number of arguments please use: python <filename> <number particles> <max_position> <max_energy>");
+    print("invalid number of arguments please use: python <filename> <number particles> <max_position> <max_energy>")
     print("optional - if you want tendencies use te same command as above with extra parameter <mode> with 0 < mode < maxposition or max energy")
-    sys.exit(-1);
+    sys.exit(-1)
     
 
 

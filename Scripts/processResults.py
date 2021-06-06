@@ -9,7 +9,7 @@ def remove_outliers(original):
     return original[1:-1]
 
 def get_speedup(first, avg):
-    return first/avg;
+    return first/avg
 
 
 test_num = 4  # const
